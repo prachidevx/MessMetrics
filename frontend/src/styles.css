@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --brand-bg: #F5F8F6;
+  --brand-surface: #FFFFFF;
+  --brand-ink: #14201C;
+  --brand-muted: #5B6B65;
+  --brand-line: #DCE5E0;
+  --brand-green: #0F6E56;
+  --brand-teal: #1D9E75;
+  --brand-mint: #E3F3EC;
+  --brand-star: #E0A028;
+  --brand-error: #A32D2D;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-bg: #0F1613;
+    --brand-surface: #17211D;
+    --brand-ink: #E8F0EC;
+    --brand-muted: #9BADA5;
+    --brand-line: #2A3833;
+    --brand-green: #5DCAA5;
+    --brand-mint: #1B2E27;
+    --brand-error: #F09595;
+  }
+}
+
+/* ---------- Global Base ---------- */
+body {
+  margin: 0;
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: 'Figtree', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbars & smooth transitions */
+::selection {
+  background-color: var(--brand-mint);
+  color: var(--brand-green);
+}
