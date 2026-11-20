@@ -1,0 +1,172 @@
+{
+  "Monday": {
+    "Breakfast": [
+      "Idli Sambhar",
+      "Coconut Chutney",
+      "Filter Coffee"
+    ],
+    "Lunch": [
+      "Rajma Masala",
+      "Steamed Rice",
+      "Tawa Roti",
+      "Cucumber Salad"
+    ],
+    "Snacks": [
+      "Crispy Samosa",
+      "Green Mint Chutney",
+      "Masala Chai"
+    ],
+    "Dinner": [
+      "Aloo Gobi",
+      "Dal Tadka",
+      "Phulka Roti",
+      "Gulab Jamun"
+    ]
+  },
+  "Tuesday": {
+    "Breakfast": [
+      "Poha",
+      "Bread & Butter",
+      "Masala Chai"
+    ],
+    "Lunch": [
+      "Shahi Paneer",
+      "Jeera Rice",
+      "Tandoori Roti",
+      "Boondi Raita"
+    ],
+    "Snacks": [
+      "Veg Cutlet",
+      "Tomato Sauce",
+      "Hot Ginger Tea"
+    ],
+    "Dinner": [
+      "Mixed Vegetable",
+      "Dal Makhani",
+      "Butter Naan",
+      "Rice Kheer"
+    ]
+  },
+  "Wednesday": {
+    "Breakfast": [
+      "Masala Dosa",
+      "Sambhar",
+      "Green Chutney",
+      "Tea"
+    ],
+    "Lunch": [
+      "Chole Bhature",
+      "Plain Rice",
+      "Onion Salad",
+      "Pickle"
+    ],
+    "Snacks": [
+      "Bread Pakoda",
+      "Sweet Imli Chutney",
+      "Cardamom Tea"
+    ],
+    "Dinner": [
+      "Palak Paneer",
+      "Yellow Dal",
+      "Chapati",
+      "Fruit Custard"
+    ]
+  },
+  "Thursday": {
+    "Breakfast": [
+      "Aloo Paratha",
+      "Curd",
+      "Pickle",
+      "Masala Chai"
+    ],
+    "Lunch": [
+      "Kadhi Pakoda",
+      "Steamed Rice",
+      "Aloo Bhindi",
+      "Roti"
+    ],
+    "Snacks": [
+      "Sev Bhel Puri",
+      "Crispy Papdi",
+      "Masala Chai"
+    ],
+    "Dinner": [
+      "Veg Biryani",
+      "Mirchi Ka Salan",
+      "Raita",
+      "Moong Dal Halwa"
+    ]
+  },
+  "Friday": {
+    "Breakfast": [
+      "Veg Upma",
+      "Coconut Chutney",
+      "Filter Coffee"
+    ],
+    "Lunch": [
+      "Paneer Butter Masala",
+      "Dal Fry",
+      "Tawa Roti",
+      "Veg Pulao"
+    ],
+    "Snacks": [
+      "Crispy Onion Pakoda",
+      "Mint Dip",
+      "Filter Coffee"
+    ],
+    "Dinner": [
+      "Dal Palak",
+      "Jeera Rice",
+      "Butter Roti",
+      "Sewaiyan Kheer"
+    ]
+  },
+  "Saturday": {
+    "Breakfast": [
+      "Puri Bhaji",
+      "Suji Halwa",
+      "Masala Chai"
+    ],
+    "Lunch": [
+      "Veg Pulao",
+      "Curd Rice",
+      "Papad",
+      "Mixed Veg Curry"
+    ],
+    "Snacks": [
+      "Grilled Veg Sandwich",
+      "Potato Chips",
+      "Chai"
+    ],
+    "Dinner": [
+      "Paneer Do Pyaza",
+      "Dal Tadka",
+      "Missi Roti",
+      "Ice Cream"
+    ]
+  },
+  "Sunday": {
+    "Breakfast": [
+      "Chole Kulche",
+      "Sweet Lassi",
+      "Fresh Fruit Bowl"
+    ],
+    "Lunch": [
+      "Paneer Lababdar",
+      "Dal Makhani",
+      "Veg Pulao",
+      "Butter Naan"
+    ],
+    "Snacks": [
+      "White Sauce Veg Pasta",
+      "Garlic Bread",
+      "Cold Coffee / Tea"
+    ],
+    "Dinner": [
+      "Pav Bhaji",
+      "Tawa Pulao",
+      "Green Salad",
+      "Fruit Custard"
+    ]
+  }
+}
