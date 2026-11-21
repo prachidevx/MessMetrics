@@ -1,0 +1,13 @@
+{
+  "name": "messmetrics",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev:frontend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && node src/index.js",
+    "build": "cd frontend && npm run build",
+    "seed:backend": "cd backend && node src/db/seed.js"
+  }
+}
