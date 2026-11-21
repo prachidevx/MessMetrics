@@ -300,8 +300,22 @@ export function MealData() {
     }
   }
 
-  // Multi-month history records from backend
-  const allRecords = monthsData.dailyRecords || []
+  // Multi-month history records from backend or fallback to state att/waste
+  const allRecords =
+    monthsData.dailyRecords?.length > 0
+      ? monthsData.dailyRecords
+      : att.map((dayAtt, i) => {
+          const dayWaste = waste[i] || [0, 0, 0, 0]
+          const d = new Date()
+          d.setDate(d.getDate() - (att.length - 1 - i))
+          return {
+            date: d.toISOString().split('T')[0],
+            dayName: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()],
+            att: dayAtt,
+            waste: dayWaste,
+            totalWaste: Math.round(sum(dayWaste) * 10) / 10,
+          }
+        })
   const displayRecords = allRecords.length > 0 ? allRecords.slice(-Number(historyFilter)).reverse() : []
 
   return (
@@ -438,34 +452,42 @@ export function MealData() {
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-line dark:divide-brand-dark-line text-xs sm:text-sm">
-              {displayRecords.map((r, i) => (
-                <tr
-                  key={r.date}
-                  className={i === 0 ? 'bg-brand-mint/30 dark:bg-brand-dark-mint/30 font-medium' : 'hover:bg-slate-50/50'}
-                >
-                  <td className="py-2.5 px-3 font-semibold text-brand-ink dark:text-brand-dark-ink whitespace-nowrap">
-                    {r.date} {i === 0 && '(Latest)'}
-                  </td>
-                  <td className="py-2.5 px-3 text-brand-muted dark:text-brand-dark-muted">
-                    {r.dayName}
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {r.att[0]} <span className="text-brand-muted text-xs">/ {r.waste[0]}kg</span>
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {r.att[1]} <span className="text-brand-muted text-xs">/ {r.waste[1]}kg</span>
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {r.att[2]} <span className="text-brand-muted text-xs">/ {r.waste[2]}kg</span>
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {r.att[3]} <span className="text-brand-muted text-xs">/ {r.waste[3]}kg</span>
-                  </td>
-                  <td className="py-2.5 px-3 text-right font-semibold text-amber-600 dark:text-amber-400">
-                    {r.totalWaste} kg
+              {displayRecords.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-8 text-brand-muted dark:text-brand-dark-muted">
+                    No historical records found for this timeframe.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                displayRecords.map((r, i) => (
+                  <tr
+                    key={r.date}
+                    className={i === 0 ? 'bg-brand-mint/30 dark:bg-brand-dark-mint/30 font-medium' : 'hover:bg-slate-50/50'}
+                  >
+                    <td className="py-2.5 px-3 font-semibold text-brand-ink dark:text-brand-dark-ink whitespace-nowrap">
+                      {r.date} {i === 0 && '(Latest)'}
+                    </td>
+                    <td className="py-2.5 px-3 text-brand-muted dark:text-brand-dark-muted">
+                      {r.dayName}
+                    </td>
+                    <td className="py-2.5 px-3">
+                      {r.att[0]} <span className="text-brand-muted text-xs">/ {r.waste[0]}kg</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      {r.att[1]} <span className="text-brand-muted text-xs">/ {r.waste[1]}kg</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      {r.att[2]} <span className="text-brand-muted text-xs">/ {r.waste[2]}kg</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      {r.att[3]} <span className="text-brand-muted text-xs">/ {r.waste[3]}kg</span>
+                    </td>
+                    <td className="py-2.5 px-3 text-right font-semibold text-amber-600 dark:text-amber-400">
+                      {r.totalWaste} kg
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
