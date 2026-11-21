@@ -41,21 +41,31 @@ function summarizeMealDishes(mealDishes) {
 
 function summarizeMeals(meals) {
   let totalAttendance = 0;
+  let totalDirectWaste = 0;
   const allMealDishes = [];
 
   for (const meal of meals) {
     totalAttendance += meal.attendance;
+    totalDirectWaste += (meal.waste || 0);
     allMealDishes.push(...meal.MealDish);
   }
+
+  const dishesSummary = summarizeMealDishes(allMealDishes);
+  const totalWasted = dishesSummary.totalWasted > 0 ? dishesSummary.totalWasted : Number(totalDirectWaste.toFixed(2));
+  const totalPrepared = dishesSummary.totalPrepared > 0 ? dishesSummary.totalPrepared : Number((totalAttendance * 0.32 + totalWasted).toFixed(2));
+  const totalConsumed = Number((totalPrepared - totalWasted).toFixed(2));
+  const wastePercentage = totalPrepared > 0 ? Number(((totalWasted / totalPrepared) * 100).toFixed(2)) : 0;
 
   return {
     totalMeals: meals.length,
     totalAttendance,
-    ...summarizeMealDishes(allMealDishes),
+    totalPrepared,
+    totalWasted,
+    totalConsumed,
+    wastePercentage,
   };
 }
 
-// GET /api/analytics/summary?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
 router.get("/summary", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -70,7 +80,6 @@ router.get("/summary", async (req, res) => {
   }
 });
 
-// GET /api/analytics/by-meal-type
 router.get("/by-meal-type", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -99,7 +108,6 @@ router.get("/by-meal-type", async (req, res) => {
   }
 });
 
-// GET /api/analytics/daily
 router.get("/daily", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;

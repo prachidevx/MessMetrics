@@ -110,10 +110,15 @@ export function StoreProvider({ children }) {
             (m) => m.toLowerCase() === meal.mealType?.toLowerCase()
           )
           if (mIdx !== -1) {
-            const wasteKg = (meal.MealDish || []).reduce(
+            const dishWaste = (meal.MealDish || []).reduce(
               (sum, d) => sum + (d.quantityWasted || 0),
               0
             )
+            const wasteKg =
+              meal.waste !== undefined && meal.waste !== null
+                ? Number(meal.waste)
+                : dishWaste
+
             dateGroups[dateStr].att[mIdx] = meal.attendance || 0
             dateGroups[dateStr].waste[mIdx] = Math.round(wasteKg * 10) / 10
           }
@@ -281,36 +286,58 @@ export function StoreProvider({ children }) {
     }))
 
     try {
-      const todayDate = new Date().toISOString()
-      for (let m = 0; m < MEALS.length; m++) {
-        const meal = await mealApi
-          .create({
-            date: todayDate,
-            mealType: MEALS[m],
-            attendance: attToday[m],
-          })
-          .catch(() => null)
+      const todayDateStr = new Date().toISOString().split('T')[0]
+      const existingMeals = await mealApi.getAll({ date: todayDateStr }).catch(() => [])
 
-        if (meal?.id) {
+      for (let m = 0; m < MEALS.length; m++) {
+        const mealType = MEALS[m]
+        const attendance = Number(attToday[m]) || 0
+        const waste = Number(wasteToday[m]) || 0
+
+        const existing = existingMeals.find(
+          (em) => em.mealType?.toLowerCase() === mealType.toLowerCase()
+        )
+
+        let savedMeal = null
+        if (existing) {
+          savedMeal = await mealApi
+            .update(existing.id, { attendance, waste })
+            .catch(() => null)
+        } else {
+          savedMeal = await mealApi
+            .create({
+              date: new Date().toISOString(),
+              mealType,
+              attendance,
+              waste,
+            })
+            .catch(async (err) => {
+              if (err.status === 409) {
+                const refreshed = await mealApi.getAll({ date: todayDateStr }).catch(() => [])
+                const match = refreshed.find(
+                  (em) => em.mealType?.toLowerCase() === mealType.toLowerCase()
+                )
+                if (match) {
+                  return mealApi.update(match.id, { attendance, waste }).catch(() => null)
+                }
+              }
+              return null
+            })
+        }
+
+        if (savedMeal?.id) {
           const todayDishes = state.menu[m] || []
           const dishes = await dishApi.getAll(MEALS[m]).catch(() => [])
           const matchingDishes = dishes.filter((d) => todayDishes.includes(d.name))
-
           const targetDishes = matchingDishes.length > 0 ? matchingDishes : dishes.slice(0, todayDishes.length)
-          if (targetDishes.length > 0) {
-            const wastePerDish = Number((wasteToday[m] / targetDishes.length).toFixed(1))
-            const prepPerDish = Number(
-              ((attToday[m] * 0.32 + wasteToday[m]) / targetDishes.length).toFixed(1)
-            )
-            const safeWaste = Math.min(wastePerDish, prepPerDish)
-            for (const d of targetDishes) {
-              await mealApi.addDishToMeal(meal.id, d.id, prepPerDish, safeWaste).catch(() => {})
-            }
+
+          for (const d of targetDishes) {
+            await mealApi.addDishToMeal(savedMeal.id, d.id, 0, 0).catch(() => {})
           }
         }
       }
       notify("Today's meal records saved")
-      syncWithBackend()
+      await syncWithBackend()
     } catch (e) {
       console.warn('Meal save note:', e)
       notify("Today's meal records saved")

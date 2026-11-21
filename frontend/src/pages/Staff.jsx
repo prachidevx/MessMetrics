@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MEALS, CAPACITY, WEEKDAYS, getTodayDayName, sum } from '../data'
 import { useStore } from '../store'
 
@@ -265,6 +265,11 @@ export function MealData() {
   const [w, setW] = useState(() => (waste[today] || [0, 0, 0, 0]).map(String))
   const [saving, setSaving] = useState(false)
   const [historyFilter, setHistoryFilter] = useState('7') // '7', '30', '90'
+
+  useEffect(() => {
+    if (att[today] && !saving) setA(att[today].map(String))
+    if (waste[today] && !saving) setW(waste[today].map(String))
+  }, [att, waste, today])
 
   const handleEdit = (arr, setArr, m, val) => {
     setArr(arr.map((x, i) => (i === m ? val : x)))

@@ -61,7 +61,6 @@ router.get("/meals", async (req, res) => {
   }
 });
 
-
 router.get("/meals/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -90,7 +89,7 @@ router.get("/meals/:id", async (req, res) => {
 
 router.post("/meals", requireAuth, async (req, res) => {
   try {
-    const { date, mealType, attendance } = req.body;
+    const { date, mealType, attendance, waste } = req.body;
 
     if (!mealType) {
       return res.status(400).json({ error: "mealType is required." });
@@ -108,11 +107,17 @@ router.post("/meals", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "Attendance cannot be negative." });
     }
 
+    const wasteNum = waste !== undefined ? Number(waste) : 0;
+    if (wasteNum < 0) {
+      return res.status(400).json({ error: "Waste cannot be negative." });
+    }
+
     const meal = await prisma.meal.create({
       data: {
         date: date ? new Date(date) : undefined,
         mealType: validatedMealType,
         attendance: attendanceNum,
+        waste: wasteNum,
       },
     });
 
@@ -127,7 +132,6 @@ router.post("/meals", requireAuth, async (req, res) => {
   }
 });
 
-
 router.put("/meals/:id", requireAuth, async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -135,7 +139,7 @@ router.put("/meals/:id", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "Invalid meal ID." });
     }
 
-    const { date, mealType, attendance } = req.body;
+    const { date, mealType, attendance, waste } = req.body;
     const data = {};
 
     if (date !== undefined) data.date = new Date(date);
@@ -154,6 +158,13 @@ router.put("/meals/:id", requireAuth, async (req, res) => {
         return res.status(400).json({ error: "Attendance cannot be negative." });
       }
       data.attendance = attNum;
+    }
+    if (waste !== undefined) {
+      const wasteNum = Number(waste);
+      if (wasteNum < 0) {
+        return res.status(400).json({ error: "Waste cannot be negative." });
+      }
+      data.waste = wasteNum;
     }
 
     const updatedMeal = await prisma.meal.update({
@@ -192,7 +203,6 @@ router.delete("/meals/:id", requireAuth, async (req, res) => {
   }
 });
 
-
 router.get("/meal-dishes", async (req, res) => {
   try {
     const { mealId, dishId } = req.query;
@@ -215,7 +225,6 @@ router.get("/meal-dishes", async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
 
 router.get("/meal-dishes/:id", async (req, res) => {
   try {
@@ -281,8 +290,6 @@ router.post("/meal-dishes", requireAuth, async (req, res) => {
       data: {
         mealId: Number(mealId),
         dishId: Number(dishId),
-        quantityPrepared: prep,
-        quantityWasted: waste,
       },
       include: {
         Dish: true,
@@ -366,7 +373,6 @@ router.put("/meal-dishes/:id", requireAuth, async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
-
 
 router.delete("/meal-dishes/:id", requireAuth, async (req, res) => {
   try {
